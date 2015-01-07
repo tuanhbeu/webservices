@@ -73,7 +73,7 @@ public class Services extends Controller {
                 "\t( \n" +
                 "\t\tselect keyword, sdp_product_id\n" +
                 "\t\tfrom sdp_keywords_matching\n" +
-                "\t\twhere type = 'SUB' and keyword in ('DK VIO','DK VIO7')\n" +
+                "\t\twhere type = 'SUB' and keyword in ('DK VIO','DK VIO7', 'XSMB')\n" +
                 "\t) as b\n" +
                 "ON a.ProductID = right(b.sdp_product_id, 10);";
 
