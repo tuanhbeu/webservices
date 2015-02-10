@@ -2,3 +2,11 @@
 
 require:
     - play
+    - reportModules -> datedfileappender 1.0.2
+
+repositories:
+    - reportModules:
+        type:       local
+        artifact:   "${application.path}/reportModules/[module]-[revision]/"
+        contains:
+            - reportModules -> *

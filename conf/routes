@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                                       Application.index
+GET     /ranking                                Application.softwingsRanking
+GET     /softwings                              Application.softwingsDownloadLink
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -1,0 +1,16 @@
+# Default play-paginate messages
+# You can specialize this file for each language.
+# For exemple, for french create a messages.fr file
+
+#play-paginate.name=play-paginate
+
+play-paginate.first=&laquo;&nbsp;
+play-paginate.prev=&lsaquo;&nbsp;
+play-paginate.next=&nbsp;&rsaquo;
+play-paginate.last=&nbsp;&raquo;
+
+play-paginate.summary.display=Hiển thị kết quả từ
+play-paginate.summary.to=đến
+play-paginate.summary.from=của
+play-paginate.summary.entries=kết quả
+

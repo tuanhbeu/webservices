@@ -3,6 +3,7 @@ package controllers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import models.Keyword;
+import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
@@ -92,5 +93,120 @@ public class Services extends Controller {
         result.addProperty("errorCode", "0");
         result.add("result", resultArray);
         renderJSON(result.toString());
+    }
+
+    public static void softwingsInsertScore (String username, int score) throws SQLException, ClassNotFoundException {
+        Logger.info("Insert Score: username = %s & score = %s", username, score);
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(Play.configuration.getProperty("vio1"));
+        statement = conn.createStatement();
+
+
+        String checkUsernameQuery = "select * from user where username = '" + username + "'";
+        resultSet = statement.executeQuery(checkUsernameQuery);
+
+        JsonObject result = new JsonObject();
+
+        if (resultSet.next()) {
+            String updateScoreQuery = "update user set best_score = " + score + " where username = '" + username + "'";
+            statement.executeUpdate(updateScoreQuery);
+            result.addProperty("result", "0");
+            Logger.info("Username %s: does exist and updated best_score: %s", username, score);
+        } else {
+            String insertUserQuery = "insert into user (username, best_score) values ('" + username + "', " + score + ")";
+            statement.executeUpdate(insertUserQuery);
+            result.addProperty("result", "1");
+            Logger.info("Username %s: is created and updated best_score: %s", username, score);
+        }
+
+
+        statement.close();
+        resultSet.close();
+        conn.close();
+
+        // return JSON
+        renderJSON(result);
+
+    }
+
+    public static void softwingsCheckUsername (String username) throws SQLException, ClassNotFoundException {
+        Logger.info("Checking username: username = %s ", username);
+
+        JsonObject result = new JsonObject();
+
+        if (usernameDoesExist(username)) {
+            result.addProperty("result", "1");
+            Logger.info("Username %s: does exist", username);
+        } else {
+            result.addProperty("result", "0");
+            Logger.info("Username %s: does not exist", username);
+        }
+
+
+        // return JSON
+        // 0: user doesn't exist
+        // 1: user exists
+        renderJSON(result);
+
+    }
+
+    public static void softwingsInsertProfile (String username, String city, String country, String facebook_id) throws ClassNotFoundException, SQLException {
+        Logger.info("Update Profile for username: username = %s , city = %s, country = %s, facebook_id = %s", username, city, country, facebook_id);
+        JsonObject result = new JsonObject();
+
+        if (usernameDoesExist(username)) {
+            Connection conn = null;
+            Statement statement = null;
+            ResultSet resultSet = null;
+
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(Play.configuration.getProperty("vio1"));
+            statement = conn.createStatement();
+
+            String updateProfileQuery = "update  user set " +
+                    "city = '" + city + "', " +
+                    "country = '" + country + ", " +
+                    "facebook_id = '" + facebook_id + " " +
+                    "where username = '" + username + "'";
+            statement.executeUpdate(updateProfileQuery);
+            statement.close();
+            resultSet.close();
+            conn.close();
+            result.addProperty("result", "0");
+        } else  {
+            result.addProperty("result", "200");
+        }
+
+        renderJSON(result);
+    }
+
+
+    private static boolean usernameDoesExist (String username) throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(Play.configuration.getProperty("vio1"));
+        statement = conn.createStatement();
+
+        String checkUsernameQuery = "select * from user where username = '" + username + "'";
+        resultSet = statement.executeQuery(checkUsernameQuery);
+
+        if (resultSet.next()) {
+            statement.close();
+            resultSet.close();
+            conn.close();
+            return  true;
+        } else {
+            statement.close();
+            resultSet.close();
+            conn.close();
+            return false;
+        }
     }
 }

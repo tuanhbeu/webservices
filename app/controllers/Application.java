@@ -13,4 +13,12 @@ public class Application extends Controller {
         render();
     }
 
+    public static void softwingsRanking() {
+        render();
+    }
+
+    public static void softwingsDownloadLink () {
+        render();
+    }
+
 }
