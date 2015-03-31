@@ -1,0 +1,35 @@
+#{extends 'main.html'/}
+
+#{set title: 'The Big Top 10 - Soft Wings'/}
+
+%{String user = "";}%
+
+<div class="softwings-rank-bg"></div>
+
+
+
+<div class="result-table">
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>USERNAME</th>
+            <th>BEST SCORE</th>
+        </tr>
+        </thead>
+        <tbody>
+        %{for(int i = 0; i < 10; i++) {}%
+        <tr>
+            <td>${i + 1}</td>
+            <td>
+                #{if 0 <= i  && i < 3}
+                    <img src="/public/images/award.png" class="award">
+                #{/if}
+                ${top10.getAsJsonArray("top10")[i].getAt("username").toString().replaceAll("\"", "")}
+            </td>
+            <td>${top10.getAsJsonArray("top10")[i].getAt("best_score").toString().replaceAll("\"", "")}</td>
+        </tr>
+        %{}}%
+        </tbody>
+    </table>
+</div>

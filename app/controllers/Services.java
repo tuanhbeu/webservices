@@ -209,4 +209,76 @@ public class Services extends Controller {
             return false;
         }
     }
+
+    public static ResultSet getUsersScores (String numUser, String country, String city, String order) throws SQLException, ClassNotFoundException {
+        if (order == null) {
+            order = "DESC";
+        }
+
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(Play.configuration.getProperty("vio1"));
+        statement = conn.createStatement();
+
+        String getUsersScoresQuery = "select * from user";
+        if (country != null || city != null) {
+
+            getUsersScoresQuery += " where ";
+            getUsersScoresQuery += country != null ? "country = '" + country + "'" : "";
+            getUsersScoresQuery += country != null && city != null ? " and " : "";
+            getUsersScoresQuery += city != null ? " city = '" + city + "'" : "";
+        }
+
+        getUsersScoresQuery += " order by best_score " + order;
+
+        getUsersScoresQuery += numUser.equalsIgnoreCase("all") ? "" : " limit " + numUser;
+
+        return resultSet = statement.executeQuery(getUsersScoresQuery);
+    }
+
+    public static void getUsersScoresJson (String numUser, String country, String city, String order) throws SQLException, ClassNotFoundException {
+        if (order == null) {
+            order = "DESC";
+        }
+
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(Play.configuration.getProperty("vio1"));
+        statement = conn.createStatement();
+
+        String getUsersScoresQuery = "select * from user";
+        if (country != null || city != null) {
+
+            getUsersScoresQuery += " where ";
+            getUsersScoresQuery += country != null ? "country = '" + country + "'" : "";
+            getUsersScoresQuery += country != null && city != null ? " and " : "";
+            getUsersScoresQuery += city != null ? " city = '" + city + "'" : "";
+        }
+
+        getUsersScoresQuery += " order by best_score " + order;
+
+        getUsersScoresQuery += numUser.equalsIgnoreCase("all") ? "" : " limit " + numUser;
+
+
+        JsonObject userScores = new JsonObject();
+        JsonArray userScoresArray = new JsonArray();
+        while (resultSet.next()) {
+            JsonObject user = new JsonObject();
+            user.addProperty("username", resultSet.getString("username"));
+            user.addProperty("best_score", resultSet.getString("best_score"));
+            user.addProperty("country", resultSet.getString("country"));
+            user.addProperty("city", resultSet.getString("city"));
+            user.addProperty("facebook_id", resultSet.getString("facebook_id"));
+
+            userScoresArray.add(user);
+        }
+
+        userScores.add("listScores", userScoresArray);
+    }
 }
