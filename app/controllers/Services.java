@@ -95,7 +95,7 @@ public class Services extends Controller {
         renderJSON(result.toString());
     }
 
-    public static void softwingsInsertScore (String username, int score) throws SQLException, ClassNotFoundException {
+    public static void softwingsInsertScore (String username, int score, String facebook_id) throws SQLException, ClassNotFoundException {
         Logger.info("Insert Score: username = %s & score = %s", username, score);
         Connection conn = null;
         Statement statement = null;
@@ -106,21 +106,21 @@ public class Services extends Controller {
         statement = conn.createStatement();
 
 
-        String checkUsernameQuery = "select * from user where username = '" + username + "'";
+        String checkUsernameQuery = "select * from user where facebook_id = '" + facebook_id + "'";
         resultSet = statement.executeQuery(checkUsernameQuery);
 
         JsonObject result = new JsonObject();
 
         if (resultSet.next()) {
-            String updateScoreQuery = "update user set best_score = " + score + " where username = '" + username + "'";
+            String updateScoreQuery = "update user set best_score = " + score + " where facebook_id = '" + facebook_id + "'";
             statement.executeUpdate(updateScoreQuery);
             result.addProperty("result", "0");
-            Logger.info("Username %s: does exist and updated best_score: %s", username, score);
+            Logger.info("Username %s: does exist and updated best_score: %s", facebook_id, score);
         } else {
-            String insertUserQuery = "insert into user (username, best_score) values ('" + username + "', " + score + ")";
+            String insertUserQuery = "insert into user (facebook_id, best_score) values ('" + facebook_id + "', " + score + ")";
             statement.executeUpdate(insertUserQuery);
             result.addProperty("result", "1");
-            Logger.info("Username %s: is created and updated best_score: %s", username, score);
+            Logger.info("Username %s: is created and updated best_score: %s", facebook_id, score);
         }
 
 

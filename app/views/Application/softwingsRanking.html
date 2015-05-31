@@ -25,9 +25,10 @@
                 #{if 0 <= i  && i < 3}
                     <img src="/public/images/award.png" class="award">
                 #{/if}
-                ${top10.getAsJsonArray("top10")[i].getAt("username").toString().replaceAll("\"", "")}
+                *{${top10.getAsJsonArray("top10")[i].getAt("username").toString().replaceAll("\"", "")}}*
+                ${top10.get("top10").get(i).getAt("username").toString().replaceAll("\"", "")}
             </td>
-            <td>${top10.getAsJsonArray("top10")[i].getAt("best_score").toString().replaceAll("\"", "")}</td>
+            <td>${top10.getAsJsonArray("top10").get(i).getAt("best_score").toString().replaceAll("\"", "")}</td>
         </tr>
         %{}}%
         </tbody>
